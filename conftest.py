@@ -1,5 +1,6 @@
 import pytest
-import utils.attach as attach
+import allure
+from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selene import browser
@@ -19,7 +20,6 @@ def setup_browser():
         options=options
     )
 
-    # Настраиваем selene.browser
     browser.config.driver = driver
     browser.config.base_url = "https://demoqa.com"
     browser.config.window_width = 1920
@@ -27,9 +27,16 @@ def setup_browser():
 
     yield browser
 
-    attach.add_screenshot(browser)
-    attach.add_logs(browser)
-    attach.add_html(browser)
-    attach.add_video(browser)
+    # артефакты для Allure
+    allure.attach(driver.get_screenshot_as_png(), name="screenshot", attachment_type=AttachmentType.PNG)
+    allure.attach(driver.page_source, name="page_source", attachment_type=AttachmentType.HTML)
+    allure.attach(str(driver.get_log("browser")), name="browser_logs", attachment_type=AttachmentType.TEXT)
+    video_url = f"https://selenoid.autotests.cloud/video/{driver.session_id}.mp4"
+    allure.attach(
+        f"<html><body><video width='100%' height='100%' controls autoplay>"
+        f"<source src='{video_url}' type='video/mp4'></video></body></html>",
+        name="video",
+        attachment_type=AttachmentType.HTML
+    )
 
-    browser.quit()
+    driver.quit()
