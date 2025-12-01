@@ -1,4 +1,5 @@
 import pytest
+from allure_commons._allure import attach
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selene import browser
@@ -25,4 +26,10 @@ def setup_browser():
     browser.config.window_height = 1080
 
     yield browser
-    driver.quit()
+
+    attach.add_screenshot(browser)
+    attach.add_logs(browser)
+    attach.add_html(browser)
+    attach.add_video(browser)
+
+    browser.quit()
