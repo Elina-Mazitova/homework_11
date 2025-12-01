@@ -1,9 +1,10 @@
 import os
 import allure
-from selene import browser, have, be
+from selene import have, be
 
 @allure.title("Successful fill form")
-def test_demo_qa():
+def test_demo_qa(setup_browser):
+    browser = setup_browser
     with allure.step("Открываем форму"):
         browser.open('https://demoqa.com/automation-practice-form')
         browser.element('#fixedban').perform(lambda _: None)
