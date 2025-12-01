@@ -1,5 +1,5 @@
 import pytest
-from allure_commons._allure import attach
+from utils import attach
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selene import browser
